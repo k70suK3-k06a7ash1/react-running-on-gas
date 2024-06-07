@@ -1,12 +1,16 @@
 import { useForm } from "@tanstack/react-form";
+type Member = {
+  name: string;
+};
 type People = {
   name: string;
   age: number;
+  members: Member[];
 };
 export function FeedbackForm() {
   const form = useForm<{ people: People[] }>({
     defaultValues: {
-      people: [],
+      people: [{ name: "ww", age: 10, members: [{ name: "sample" }] }],
     },
     onSubmit({ value }) {
       alert(JSON.stringify(value));
@@ -23,39 +27,111 @@ export function FeedbackForm() {
         }}
       >
         <form.Field name='people' mode='array'>
-          {(field) => {
-            return (
-              <div>
-                {field.state.value.map((_, i) => {
-                  return (
-                    <form.Field key={i} name={`people[${i}].name`}>
-                      {(subField) => {
-                        return (
-                          <div>
-                            <label>
-                              <div>Name for person {i}</div>
-                              <input
-                                value={subField.state.value}
-                                onChange={(e) =>
-                                  subField.handleChange(e.target.value)
-                                }
-                              />
-                            </label>
-                          </div>
-                        );
-                      }}
+          {(field) => (
+            <div key={`test-${field.state.value}`}>
+              {field.state.value.map((_, i) => (
+                <>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "8px",
+                      justifyContent: "center",
+                      padding: "8px",
+                    }}
+                  >
+                    <form.Field
+                      key={`people-name-${i}`}
+                      name={`people[${i}].name`}
+                    >
+                      {(subField) => (
+                        <div>
+                          <label>
+                            <div>Name for person {i}</div>
+                            <input
+                              value={subField.state.value}
+                              onChange={(e) =>
+                                subField.handleChange(e.target.value)
+                              }
+                            />
+                          </label>
+                        </div>
+                      )}
                     </form.Field>
-                  );
-                })}
-                <button
-                  onClick={() => field.pushValue({ name: "", age: 0 })}
-                  type='button'
-                >
-                  Add person
-                </button>
-              </div>
-            );
-          }}
+
+                    <form.Field
+                      key={`people-age-${i}`}
+                      name={`people[${i}].age`}
+                    >
+                      {(subField) => (
+                        <div>
+                          <label>
+                            <div>Name for person {i}</div>
+                            <input
+                              value={subField.state.value}
+                              onChange={(e) =>
+                                subField.handleChange(Number(e.target.value))
+                              }
+                            />
+                          </label>
+                        </div>
+                      )}
+                    </form.Field>
+                  </div>
+
+                  <form.Field
+                    key={`people[${i}].members`}
+                    name={`people[${i}].members`}
+                    mode='array'
+                  >
+                    {(childrenField) => (
+                      <div key={`people[${i}].members`}>
+                        {childrenField.state.value.map((_, idx) => (
+                          <form.Field
+                            key={`member-name-${idx}-${i}`}
+                            name={`people[${i}].members[${idx}].name`}
+                          >
+                            {(childField) => (
+                              <label>
+                                <div>Name for member {idx}</div>
+                                <input
+                                  value={childField.state.value}
+                                  onChange={(e) =>
+                                    childField.handleChange(e.target.value)
+                                  }
+                                />
+                              </label>
+                            )}
+                          </form.Field>
+                        ))}
+                        <button
+                          onClick={() =>
+                            childrenField.pushValue({
+                              name: "",
+                            })
+                          }
+                          type='button'
+                        >
+                          Add Member
+                        </button>
+                      </div>
+                    )}
+                  </form.Field>
+                </>
+              ))}
+              <button
+                onClick={() =>
+                  field.pushValue({
+                    name: "",
+                    age: 0,
+                    members: [{ name: "" }],
+                  })
+                }
+                type='button'
+              >
+                Add
+              </button>
+            </div>
+          )}
         </form.Field>
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
