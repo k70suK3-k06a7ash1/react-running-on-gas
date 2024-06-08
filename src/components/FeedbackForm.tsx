@@ -1,16 +1,21 @@
 import { useForm } from "@tanstack/react-form";
-type Member = {
-  name: string;
-};
-type People = {
-  name: string;
-  age: number;
-  members: Member[];
-};
+
 export function FeedbackForm() {
-  const form = useForm<{ people: People[] }>({
+  const form = useForm({
     defaultValues: {
-      people: [{ name: "ww", age: 10, members: [{ name: "sample" }] }],
+      people: [
+        {
+          key: "a",
+          name: "ww",
+          age: 10,
+          members: [{ name: "sample" }],
+        },
+      ] as {
+        key: string;
+        name: string;
+        age: number;
+        members: { name: string }[];
+      }[],
     },
     onSubmit({ value }) {
       alert(JSON.stringify(value));
@@ -26,12 +31,16 @@ export function FeedbackForm() {
           form.handleSubmit();
         }}
       >
-        <form.Field name="people" mode="array">
-          {(field) => (
+        <form.Field
+          name="people"
+          mode="array"
+          key={"people"}
+          children={(field) => (
             <div key={`test-${field.state.value}`}>
               {field.state.value.map((_, i) => (
                 <>
                   <div
+                    key={`child-test-${field.state.value}`}
                     style={{
                       display: "flex",
                       gap: "8px",
@@ -40,10 +49,9 @@ export function FeedbackForm() {
                     }}
                   >
                     <form.Field
-                      key={`people-name-${i}`}
+                      key={`people[${i}].name`}
                       name={`people[${i}].name`}
-                    >
-                      {(subField) => (
+                      children={(subField) => (
                         <div>
                           <label>
                             <div>Name for person {i}</div>
@@ -56,14 +64,13 @@ export function FeedbackForm() {
                           </label>
                         </div>
                       )}
-                    </form.Field>
+                    />
 
                     <form.Field
-                      key={`people-age-${i}`}
+                      key={`people[${i}].age`}
                       name={`people[${i}].age`}
-                    >
-                      {(subField) => (
-                        <div>
+                      children={(subField) => (
+                        <div key={subField.state.value}>
                           <label>
                             <div>Name for person {i}</div>
                             <input
@@ -75,15 +82,14 @@ export function FeedbackForm() {
                           </label>
                         </div>
                       )}
-                    </form.Field>
+                    />
                   </div>
 
                   <form.Field
                     key={`people[${i}].members`}
                     name={`people[${i}].members`}
                     mode="array"
-                  >
-                    {(childrenField) => (
+                    children={(childrenField) => (
                       <div
                         style={{
                           display: "flex",
@@ -115,7 +121,7 @@ export function FeedbackForm() {
                           <button
                             onClick={() =>
                               childrenField.pushValue({
-                                name: "",
+                                name: "init",
                               })
                             }
                             type="button"
@@ -125,14 +131,16 @@ export function FeedbackForm() {
                         </div>
                       </div>
                     )}
-                  </form.Field>
+                  />
                 </>
               ))}
               <button
+                key={"button"}
                 onClick={() =>
                   field.pushValue({
-                    name: "",
-                    age: 0,
+                    key: "1",
+                    name: "init",
+                    age: 10,
                     members: [{ name: "" }],
                   })
                 }
@@ -142,7 +150,8 @@ export function FeedbackForm() {
               </button>
             </div>
           )}
-        </form.Field>
+        />
+
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
