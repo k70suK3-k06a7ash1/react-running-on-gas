@@ -26,7 +26,7 @@ export function FeedbackForm() {
           form.handleSubmit();
         }}
       >
-        <form.Field name='people' mode='array'>
+        <form.Field name="people" mode="array">
           {(field) => (
             <div key={`test-${field.state.value}`}>
               {field.state.value.map((_, i) => (
@@ -81,10 +81,18 @@ export function FeedbackForm() {
                   <form.Field
                     key={`people[${i}].members`}
                     name={`people[${i}].members`}
-                    mode='array'
+                    mode="array"
                   >
                     {(childrenField) => (
-                      <div key={`people[${i}].members`}>
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: "8px",
+                          justifyContent: "center",
+                          padding: "8px",
+                        }}
+                        key={`people[${i}].members`}
+                      >
                         {childrenField.state.value.map((_, idx) => (
                           <form.Field
                             key={`member-name-${idx}-${i}`}
@@ -103,16 +111,18 @@ export function FeedbackForm() {
                             )}
                           </form.Field>
                         ))}
-                        <button
-                          onClick={() =>
-                            childrenField.pushValue({
-                              name: "",
-                            })
-                          }
-                          type='button'
-                        >
-                          Add Member
-                        </button>
+                        <div>
+                          <button
+                            onClick={() =>
+                              childrenField.pushValue({
+                                name: "",
+                              })
+                            }
+                            type="button"
+                          >
+                            Add Member
+                          </button>
+                        </div>
                       </div>
                     )}
                   </form.Field>
@@ -126,7 +136,7 @@ export function FeedbackForm() {
                     members: [{ name: "" }],
                   })
                 }
-                type='button'
+                type="button"
               >
                 Add
               </button>
@@ -136,7 +146,7 @@ export function FeedbackForm() {
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <button type='submit' disabled={!canSubmit}>
+            <button type="submit" disabled={!canSubmit}>
               {isSubmitting ? "..." : "Submit"}
             </button>
           )}
