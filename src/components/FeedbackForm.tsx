@@ -1,166 +1,415 @@
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 import { useForm } from "@tanstack/react-form";
+import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
+import {
+  AlertCircle,
+  //LoaderCircle,
+  X,
+} from "lucide-react";
+// import { validateUsername } from "@/api/user";
+// import { zodValidator } from "@tanstack/zod-form-adapter";
+// import { z } from "zod";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "./ui/select";
 
-export function FeedbackForm() {
+// const UsernameSchema = z
+//   .string()
+//   .min(3, "Username must be at least 3 characters!!!");
+
+export const FeedbackForm = () => {
   const form = useForm({
     defaultValues: {
-      people: [
-        {
-          key: "a",
-          name: "ww",
-          age: 10,
-          members: [{ name: "sample" }],
-        },
-      ] as {
-        key: string;
-        name: string;
-        age: number;
-        members: { name: string }[];
+      feedbacks: [] as {
+        system: string;
+        opinions: { context: string }[];
       }[],
     },
-    onSubmit({ value }) {
-      alert(JSON.stringify(value));
+    validators: {
+      onSubmit: ({ value }) => {
+        if (!value.feedbacks.length) {
+          return "Please fill in all fields";
+        }
+      },
+    },
+    onSubmit: ({ value }) => {
+      console.log(value);
     },
   });
-
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
-        <form.Field
-          name="people"
-          mode="array"
-          key={"people"}
-          children={(field) => (
-            <div key={`test-${field.state.value}`}>
-              {field.state.value.map((_, i) => (
+    <Card className="w-[400px]">
+      <CardHeader>
+        <CardTitle>FeedbackForm</CardTitle>
+        <CardDescription>
+          Creating a form with <span className="font-bold">@Kγ0suKε</span>
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+          }}
+        >
+          {/* <form.Field
+            name="username"
+            validatorAdapter={zodValidator}
+            validators={{
+              onChangeAsyncDebounceMs: 500,
+              onChangeAsync: ({ value }) => validateUsername(value),
+              onChange: UsernameSchema,
+            }}
+            children={(field) => (
+              <div>
+                <Label htmlFor="username">Username</Label>
+                <div className="relative">
+                  <Input
+                    id="username"
+                    type="text"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                  {field.getMeta().isValidating && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                      <LoaderCircle className="animate-spin" />
+                    </div>
+                  )}
+                </div>
+                {field.state.meta.errors && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {field.state.meta.errors}
+                  </div>
+                )}
+              </div>
+            )}
+          />
+          <form.Field
+            name="password"
+            validators={{
+              onChange: ({ value }) => {
+                if (value.length < 6) {
+                  return "Password must be at least 6 characters long";
+                }
+
+                if (!/[A-Z]/.test(value)) {
+                  return "Password must contain at least one uppercase letter";
+                }
+
+                if (!/[a-z]/.test(value)) {
+                  return "Password must contain at least one lowercase letter";
+                }
+
+                if (!/[0-9]/.test(value)) {
+                  return "Password must contain at least one number";
+                }
+              },
+            }}
+            children={(field) => (
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {field.state.meta.errors && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {field.state.meta.errors}
+                  </div>
+                )}
+              </div>
+            )}
+          />
+          <form.Field
+            name="confirmPassword"
+            validators={{
+              onChangeListenTo: ["password"],
+              onChange: ({ value, fieldApi }) =>
+                value !== fieldApi.form.getFieldValue("password") &&
+                "Passwords do not match",
+            }}
+            children={(field) => (
+              <div>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                {field.state.meta.errors && (
+                  <div className="text-red-500 text-sm mt-1">
+                    {field.state.meta.errors}
+                  </div>
+                )}
+              </div>
+            )}
+          />
+          <div>
+            <form.Field
+              name="interests"
+              mode="array"
+              children={(field) => (
                 <>
-                  <div
-                    key={`child-test-${field.state.value}`}
-                    style={{
-                      display: "flex",
-                      gap: "8px",
-                      justifyContent: "center",
-                      padding: "8px",
-                    }}
+                  <Label className="mr-2">Interests</Label>
+                  {field.state.value.map((_, index) => (
+                    <div key={index} className="flex gap-2 my-2">
+                      <Select
+                        value={`${index}`}
+                        onValueChange={(newIndex) =>
+                          field.moveValue(index, +newIndex)
+                        }
+                      >
+                        <SelectTrigger className="w-28">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {field.state.value.map((_, index) => (
+                            <SelectItem key={index} value={`${index}`}>
+                              # {index + 1}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <form.Field
+                        name={`interests[${index}]`}
+                        children={(subField) => (
+                          <Input
+                            type="text"
+                            value={subField.state.value}
+                            autoFocus
+                            onChange={(e) =>
+                              subField.handleChange(e.target.value)
+                            }
+                          />
+                        )}
+                      />
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => field.removeValue(index)}
+                      >
+                        <X />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => field.pushValue("")}
                   >
-                    <form.Field
-                      key={`people[${i}].name`}
-                      name={`people[${i}].name`}
-                      children={(subField) => (
-                        <div>
-                          <label>
-                            <div>Name for person {i}</div>
-                            <input
+                    Add
+                  </Button>
+                </>
+              )}
+            />
+          </div>
+          <div>
+            <form.Field
+              name="skills"
+              mode="array"
+              children={(field) => (
+                <>
+                  <Label className="mr-2">Skills</Label>
+                  {field.state.value.map((_, index) => (
+                    <div key={index} className="flex gap-2 my-2">
+                      <form.Field
+                        name={`skills[${index}].language`}
+                        children={(subField) => (
+                          <Input
+                            type="text"
+                            value={subField.state.value}
+                            autoFocus
+                            onChange={(e) =>
+                              subField.handleChange(e.target.value)
+                            }
+                          />
+                        )}
+                      />
+                      <form.Field
+                        name={`skills[${index}].rating`}
+                        children={(subField) => (
+                          <Input
+                            type="number"
+                            value={subField.state.value}
+                            onChange={(e) =>
+                              subField.handleChange(e.target.valueAsNumber)
+                            }
+                          />
+                        )}
+                      />
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => field.removeValue(index)}
+                      >
+                        <X />
+                      </Button>
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant={"outline"}
+                    onClick={() => field.pushValue({ language: "", rating: 0 })}
+                  >
+                    Add
+                  </Button>
+                </>
+              )}
+            />
+          </div> */}
+          <div>
+            <form.Field
+              name="feedbacks"
+              mode="array"
+              children={(field) => (
+                <>
+                  <div>
+                    <Label>Feedback</Label>
+                  </div>
+                  {field.state.value.map((_, index) => (
+                    <div key={index}>
+                      <div className="flex gap-2 my-2 items-center">
+                        <Label className="mr-2">System Name</Label>
+                        <form.Field
+                          name={`feedbacks[${index}].system`}
+                          children={(subField) => (
+                            <Input
+                              type="text"
                               value={subField.state.value}
+                              autoFocus
                               onChange={(e) =>
                                 subField.handleChange(e.target.value)
                               }
                             />
-                          </label>
-                        </div>
-                      )}
-                    />
-
-                    <form.Field
-                      key={`people[${i}].age`}
-                      name={`people[${i}].age`}
-                      children={(subField) => (
-                        <div key={subField.state.value}>
-                          <label>
-                            <div>Name for person {i}</div>
-                            <input
-                              value={subField.state.value}
-                              onChange={(e) =>
-                                subField.handleChange(Number(e.target.value))
-                              }
-                            />
-                          </label>
-                        </div>
-                      )}
-                    />
-                  </div>
-
-                  <form.Field
-                    key={`people[${i}].members`}
-                    name={`people[${i}].members`}
-                    mode="array"
-                    children={(childrenField) => (
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "8px",
-                          justifyContent: "center",
-                          padding: "8px",
-                        }}
-                        key={`people[${i}].members`}
-                      >
-                        {childrenField.state.value.map((_, idx) => (
-                          <form.Field
-                            key={`member-name-${idx}-${i}`}
-                            name={`people[${i}].members[${idx}].name`}
-                          >
-                            {(childField) => (
-                              <label>
-                                <div>Name for member {idx}</div>
-                                <input
-                                  value={childField.state.value}
-                                  onChange={(e) =>
-                                    childField.handleChange(e.target.value)
-                                  }
-                                />
-                              </label>
-                            )}
-                          </form.Field>
-                        ))}
+                          )}
+                        />
+                      </div>
+                      <div>
                         <div>
-                          <button
-                            onClick={() =>
-                              childrenField.pushValue({
-                                name: "init",
-                              })
-                            }
-                            type="button"
-                          >
-                            Add Member
-                          </button>
+                          <Label>Opinions</Label>
+                        </div>
+                        <div>
+                          <form.Field
+                            name={`feedbacks[${index}].opinions`}
+                            children={(subField) => (
+                              <>
+                                {subField.state.value.map((_, idx) => (
+                                  <div key={index} className="flex gap-2 my-2">
+                                    <form.Field
+                                      name={`feedbacks[${index}].opinions[${idx}].context`}
+                                      children={(subField) => (
+                                        <Input
+                                          type="text"
+                                          value={subField.state.value}
+                                          autoFocus
+                                          onChange={(e) =>
+                                            subField.handleChange(
+                                              e.target.value
+                                            )
+                                          }
+                                        />
+                                      )}
+                                    />
+
+                                    <Button
+                                      variant={"destructive"}
+                                      onClick={() => field.removeValue(index)}
+                                    >
+                                      <X />
+                                    </Button>
+                                    <Button
+                                      type="button"
+                                      variant={"outline"}
+                                      onClick={() =>
+                                        subField.pushValue({
+                                          context: "add",
+                                        })
+                                      }
+                                    >
+                                      Add
+                                    </Button>
+                                  </div>
+                                ))}
+                              </>
+                            )}
+                          />
                         </div>
                       </div>
-                    )}
-                  />
+                      {/* <Button
+                        variant={"destructive"}
+                        onClick={() => field.removeValue(index)}
+                      >
+                        <X />
+                      </Button> */}
+                    </div>
+                  ))}
+                  <Button
+                    type="button"
+                    variant={"outline"}
+                    onClick={() =>
+                      field.pushValue({
+                        system: "",
+                        opinions: [{ context: "w" }],
+                      })
+                    }
+                  >
+                    Add Sysmtem Section
+                  </Button>
                 </>
-              ))}
-              <button
-                key={"button"}
-                onClick={() =>
-                  field.pushValue({
-                    key: "1",
-                    name: "init",
-                    age: 10,
-                    members: [{ name: "" }],
-                  })
-                }
-                type="button"
-              >
-                Add
-              </button>
-            </div>
-          )}
-        />
-
+              )}
+            />
+          </div>
+          <form.Subscribe
+            selector={(state) => state.errors}
+            children={(errors) =>
+              errors.length > 0 && (
+                <Alert variant={"destructive"}>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Error</AlertTitle>
+                  <AlertDescription>{errors}</AlertDescription>
+                </Alert>
+              )
+            }
+          />
+        </form>
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Button variant="outline" onClick={form.reset}>
+          Reset
+        </Button>
+        <Button
+          variant={"ghost"}
+          onClick={() => console.log(form.state.values)}
+        >
+          Debug
+        </Button>
         <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <button type="submit" disabled={!canSubmit}>
-              {isSubmitting ? "..." : "Submit"}
-            </button>
+          selector={(state) => [state.canSubmit, state.isValidating]}
+          children={([canSubmit, isValidating]) => (
+            <Button
+              onClick={form.handleSubmit}
+              disabled={!canSubmit || isValidating}
+            >
+              Submit
+            </Button>
           )}
         />
-      </form>
-    </div>
+      </CardFooter>
+    </Card>
   );
-}
+};

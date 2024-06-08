@@ -1,9 +1,9 @@
-// import { FeedbackForm } from "./components/FeedbackForm";
 import { GASClient } from "gas-client";
 
 import * as server from "../server/main";
-import { SignUp } from "./components/SignUp";
+import { FeedbackForm } from "./components/FeedbackForm";
 import Typography from "./components/ui/typography";
+import { Button } from "./components/ui/button";
 
 const { serverFunctions } = new GASClient<typeof server>();
 
@@ -20,12 +20,12 @@ function App() {
         variant={"h1"}
         className="my-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-yellow-600"
       >
-        TanStack Form Tutorial
+        Voice of Customer
       </Typography>
-      <SignUp />
-      <button type="button" onClick={handleButtonClick}>
-        ボタン
-      </button>
+      <FeedbackForm />
+      <Button type="button" onClick={handleButtonClick}>
+        Button
+      </Button>
     </div>
   );
 }
