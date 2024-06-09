@@ -123,7 +123,7 @@ export const FeedbackForm = () => {
                         />
                       </div>
                       <div>
-                        <div className="flex gap-2 items-center py-4">
+                        <div className="flex gap-2 items-center pt-4">
                           <Label>Opinions</Label>
                           <SquarePlus
                             onClick={() =>
