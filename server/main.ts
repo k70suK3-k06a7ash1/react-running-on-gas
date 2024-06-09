@@ -30,7 +30,10 @@ const getSheetData = (): SheetData => {
 
 // TODO: テスト用の関数なので、適切なものに変更する
 const appendRowsToSheet = (sheetName: string, rowsToAdd: number): void => {
-  const sheet = SpreadsheetApp.openById("SHEET_ID").getSheetByName(sheetName);
+  const sheetId =
+    PropertiesService.getScriptProperties().getProperty("SHEET_ID") ?? "";
+
+  const sheet = SpreadsheetApp.openById(sheetId).getSheetByName(sheetName);
   if (!sheet) return;
   sheet.insertRowsAfter(sheet.getMaxRows(), rowsToAdd);
   sheet.getRange(1, 1, 5, 5).setValues([
