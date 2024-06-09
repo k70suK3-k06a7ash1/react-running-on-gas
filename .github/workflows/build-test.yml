@@ -1,4 +1,4 @@
-name: Build test
+name: Build and Vitest
 
 on:
   push:
@@ -19,5 +19,11 @@ jobs:
         with:
           version: 9
 
+      - name: pnpm install
+        run: pnpm install
+
       - name: build test
-        run: pnpm install && pnpm run build
+        run: pnpm run build
+
+      - name: exec vitest
+        run: pnpm run test
