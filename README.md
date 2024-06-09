@@ -2,6 +2,8 @@
 
 ```bash
 npm install -g @google/clasp
+npx clasp push
+npx clasp deploy
 ```
 
 # React + TypeScript + Vite
