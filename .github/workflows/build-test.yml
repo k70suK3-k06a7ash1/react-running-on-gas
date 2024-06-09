@@ -20,4 +20,4 @@ jobs:
           version: 9
 
       - name: build test
-        run: pnpm run build
+        run: pnpm install && pnpm run build
