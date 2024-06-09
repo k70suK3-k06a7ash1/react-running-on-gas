@@ -1,2 +1,2 @@
 deploy:
-	npm run build && clasp push && npx clasp deploy
+	npm run build && npx clasp push && npx clasp deploy
