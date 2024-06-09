@@ -12,11 +12,18 @@ import { Input } from "./ui/input";
 import { useForm } from "@tanstack/react-form";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { AlertCircle, ListPlus, SquarePlus, X } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 export const FeedbackForm = () => {
   const form = useForm({
     defaultValues: {
-      feedbacks: [{ system: "", opinions: [{ context: "" }] }] as {
+      feedbacks: [{ system: "sample", opinions: [{ context: "" }] }] as {
         system: string;
         opinions: { context: string }[];
       }[],
@@ -32,6 +39,9 @@ export const FeedbackForm = () => {
       console.log(value);
     },
   });
+
+  const options = ["sample", "test"];
+
   return (
     <Card className="w-[400px]">
       <CardHeader>
@@ -73,14 +83,29 @@ export const FeedbackForm = () => {
                         <form.Field
                           name={`feedbacks[${index}].system`}
                           children={(subField) => (
-                            <Input
-                              type="text"
+                            <Select
                               value={subField.state.value}
-                              autoFocus
-                              onChange={(e) =>
-                                subField.handleChange(e.target.value)
+                              onValueChange={(value) =>
+                                subField.handleChange(value)
                               }
-                            />
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {options.map((value, index) => (
+                                  <SelectItem
+                                    key={index}
+                                    value={value}
+                                    disabled={form.state.values.feedbacks
+                                      .map((v) => v.system)
+                                      .includes(value)}
+                                  >
+                                    {value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
                           )}
                         />
                       </div>
@@ -133,12 +158,6 @@ export const FeedbackForm = () => {
                           />
                         </div>
                       </div>
-                      {/* <Button
-                        variant={"destructive"}
-                        onClick={() => field.removeValue(index)}
-                      >
-                        <X />
-                      </Button> */}
                     </div>
                   ))}
                 </>
