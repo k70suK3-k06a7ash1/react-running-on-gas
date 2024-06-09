@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Build and Push
+    name: Build Test
 
     steps:
       - name: git-checkout
