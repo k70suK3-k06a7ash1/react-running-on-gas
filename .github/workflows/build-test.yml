@@ -1,0 +1,21 @@
+name: Build test
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build and Push
+
+    steps:
+      - name: git-checkout
+        uses: actions/checkout@v4
+
+      - name: pnpm-setup
+        uses: pnpm/action-setup@v4
+
+      - name: build test
+        run: pnpm run build
