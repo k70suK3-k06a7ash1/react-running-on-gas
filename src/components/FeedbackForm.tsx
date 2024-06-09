@@ -11,7 +11,13 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { useForm } from "@tanstack/react-form";
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
-import { AlertCircle, ListPlus, SquarePlus, X } from "lucide-react";
+import {
+  AlertCircle,
+  CircleX,
+  ListPlus,
+  SquarePlus,
+  Trash2,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -66,6 +72,7 @@ export const FeedbackForm = () => {
                 <>
                   <div className="flex gap-2 items-center">
                     <Label>Feedback</Label>
+
                     <ListPlus
                       className="cursor-pointer"
                       onClick={() =>
@@ -78,8 +85,14 @@ export const FeedbackForm = () => {
                   </div>
                   {field.state.value.map((_, index) => (
                     <div key={index} className="py-4">
-                      <div className="flex gap-2 items-center">
-                        <Label className="mr-2">System</Label>
+                      <div className="">
+                        <div className="flex justify-between items-center py-2">
+                          <Label className="mr-2">System</Label>
+                          <Trash2
+                            className="cursor-pointer"
+                            onClick={() => field.removeValue(index)}
+                          />
+                        </div>
                         <form.Field
                           name={`feedbacks[${index}].system`}
                           children={(subField) => (
@@ -89,7 +102,7 @@ export const FeedbackForm = () => {
                                 subField.handleChange(value)
                               }
                             >
-                              <SelectTrigger className="w-28">
+                              <SelectTrigger>
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -129,7 +142,10 @@ export const FeedbackForm = () => {
                             children={(subField) => (
                               <>
                                 {subField.state.value.map((_, idx) => (
-                                  <div key={index} className="flex gap-2 my-2">
+                                  <div
+                                    key={index}
+                                    className="flex gap-2 my-2 items-center"
+                                  >
                                     <form.Field
                                       name={`feedbacks[${index}].opinions[${idx}].context`}
                                       children={(subField) => (
@@ -144,13 +160,12 @@ export const FeedbackForm = () => {
                                         />
                                       )}
                                     />
-
-                                    <Button
-                                      variant={"destructive"}
-                                      onClick={() => field.removeValue(index)}
-                                    >
-                                      <X />
-                                    </Button>
+                                    <CircleX
+                                      className="cursor-pointer"
+                                      onClick={() =>
+                                        subField.removeValue(index)
+                                      }
+                                    />
                                   </div>
                                 ))}
                               </>
