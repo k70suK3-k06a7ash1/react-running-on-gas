@@ -25,14 +25,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
+import { FormValue } from "@/types";
 
 export const FeedbackForm = () => {
+  const initValue: FormValue[] = [
+    { system: "sample", opinions: [{ context: "" }] },
+  ];
   const form = useForm({
     defaultValues: {
-      feedbacks: [{ system: "sample", opinions: [{ context: "" }] }] as {
-        system: string;
-        opinions: { context: string }[];
-      }[],
+      feedbacks: initValue,
     },
     validators: {
       onSubmit: ({ value }) => {
@@ -49,16 +50,16 @@ export const FeedbackForm = () => {
   const options = ["sample", "test"];
 
   return (
-    <Card className="w-[400px]">
+    <Card className='w-[400px]'>
       <CardHeader>
         <CardTitle>FeedbackForm</CardTitle>
         <CardDescription>
-          Creating a form with <span className="font-bold">@Kγ0suKε</span>
+          Creating a form with <span className='font-bold'>@Kγ0suKε</span>
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form
-          className="flex flex-col gap-4"
+          className='flex flex-col gap-4'
           onSubmit={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -66,15 +67,15 @@ export const FeedbackForm = () => {
         >
           <div>
             <form.Field
-              name="feedbacks"
-              mode="array"
+              name='feedbacks'
+              mode='array'
               children={(field) => (
                 <>
-                  <div className="flex gap-2 items-center">
+                  <div className='flex gap-2 items-center'>
                     <Label>Feedback</Label>
 
                     <ListPlus
-                      className="cursor-pointer"
+                      className='cursor-pointer'
                       onClick={() =>
                         field.pushValue({
                           system: "",
@@ -84,12 +85,12 @@ export const FeedbackForm = () => {
                     />
                   </div>
                   {field.state.value.map((_, index) => (
-                    <div key={index} className="py-4">
-                      <div className="">
-                        <div className="flex justify-between items-center py-2">
-                          <Label className="mr-2">System</Label>
+                    <div key={index} className='py-4'>
+                      <div className=''>
+                        <div className='flex justify-between items-center py-2'>
+                          <Label className='mr-2'>System</Label>
                           <Trash2
-                            className="cursor-pointer"
+                            className='cursor-pointer'
                             onClick={() => field.removeValue(index)}
                           />
                         </div>
@@ -123,7 +124,7 @@ export const FeedbackForm = () => {
                         />
                       </div>
                       <div>
-                        <div className="flex gap-2 items-center pt-4">
+                        <div className='flex gap-2 items-center pt-4'>
                           <Label>Opinions</Label>
                           <SquarePlus
                             onClick={() =>
@@ -144,13 +145,13 @@ export const FeedbackForm = () => {
                                 {subField.state.value.map((_, idx) => (
                                   <div
                                     key={index}
-                                    className="flex gap-2 my-2 items-center"
+                                    className='flex gap-2 my-2 items-center'
                                   >
                                     <form.Field
                                       name={`feedbacks[${index}].opinions[${idx}].context`}
                                       children={(subField) => (
                                         <Input
-                                          type="text"
+                                          type='text'
                                           value={subField.state.value}
                                           onChange={(e) =>
                                             subField.handleChange(
@@ -161,7 +162,7 @@ export const FeedbackForm = () => {
                                       )}
                                     />
                                     <CircleX
-                                      className="cursor-pointer"
+                                      className='cursor-pointer'
                                       onClick={() =>
                                         subField.removeValue(index)
                                       }
@@ -184,7 +185,7 @@ export const FeedbackForm = () => {
             children={(errors) =>
               errors.length > 0 && (
                 <Alert variant={"destructive"}>
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className='h-4 w-4' />
                   <AlertTitle>Error</AlertTitle>
                   <AlertDescription>{errors}</AlertDescription>
                 </Alert>
@@ -193,8 +194,8 @@ export const FeedbackForm = () => {
           />
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline" onClick={form.reset}>
+      <CardFooter className='flex justify-between'>
+        <Button variant='outline' onClick={form.reset}>
           Reset
         </Button>
         <Button
