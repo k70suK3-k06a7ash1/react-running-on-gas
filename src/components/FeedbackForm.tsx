@@ -126,17 +126,6 @@ export const FeedbackForm = () => {
                       <div>
                         <div className='flex gap-2 items-center pt-4'>
                           <Label>Opinions</Label>
-                          <SquarePlus
-                            className='cursor-pointer'
-                            onClick={() =>
-                              field.form.pushFieldValue(
-                                `feedbacks[${index}].opinions`,
-                                {
-                                  context: "",
-                                }
-                              )
-                            }
-                          />
                         </div>
                         <div>
                           <form.Field
@@ -170,6 +159,20 @@ export const FeedbackForm = () => {
                                     />
                                   </div>
                                 ))}
+                                <Button
+                                  className='block'
+                                  asChild
+                                  onClick={() =>
+                                    subField.pushValue({
+                                      context: "",
+                                    })
+                                  }
+                                >
+                                  <div className='flex gap-2'>
+                                    Add
+                                    <SquarePlus className='cursor-pointer' />
+                                  </div>
+                                </Button>
                               </>
                             )}
                           />
