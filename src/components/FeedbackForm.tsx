@@ -151,12 +151,16 @@ export const FeedbackForm = () => {
                                         />
                                       )}
                                     />
-                                    <CircleX
-                                      className='cursor-pointer'
-                                      onClick={() =>
-                                        subField.removeValue(index)
-                                      }
-                                    />
+                                    <>
+                                      {subField.state.value.length > 1 && (
+                                        <CircleX
+                                          className='cursor-pointer'
+                                          onClick={() =>
+                                            subField.removeValue(index)
+                                          }
+                                        />
+                                      )}
+                                    </>
                                   </div>
                                 ))}
                                 <Button
