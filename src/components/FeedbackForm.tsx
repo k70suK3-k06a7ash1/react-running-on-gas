@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { FormValue } from "@/types";
+import { Textarea } from "./ui/textarea";
 
 export const FeedbackForm = () => {
   const initValue: FormValue[] = [
@@ -140,8 +141,7 @@ export const FeedbackForm = () => {
                                     <form.Field
                                       name={`feedbacks[${index}].opinions[${idx}].context`}
                                       children={(subField) => (
-                                        <Input
-                                          type='text'
+                                        <Textarea
                                           value={subField.state.value}
                                           onChange={(e) =>
                                             subField.handleChange(
